@@ -1,5 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
+import {useEffect, useState} from 'react'
 
 function App() {
   // const registerdata = async () => {
@@ -28,7 +29,8 @@ function App() {
   //     console.log(error);
   //   }
   // };
-
+  const [train, setTrain] = useState(null)
+  
   const getToken = async () => {
     const object = {
       companyName: "train scheduler",
@@ -75,20 +77,43 @@ function App() {
       const response = await fetch('http://localhost:5000/api/getTrains',type);
       const json = await response.json();
       console.log(json);
+      setTrain(json);
 
     } catch (err) {
       console.log(err);
     }
   }
 
-  
+  useEffect(()=>{
+    getToken();
+  },[])
 
   return (
     <div className="App">
-      <button onClick={getToken}>fetch</button>
       <button onClick={fetchTrains}>fetch trains</button>
+      <div className="traindata">
+      {
+        train?(
+          train.map((e)=>{
+          return <Traincard name = {e.trainName} number = {e.trainNumber} time = {e.departureTime}/>
+        })):null
+      }
+      </div>
     </div>
   );
+}
+
+const Traincard = (props)=>{
+  return (
+    <ul>
+      <li>{props.name}</li>
+      <li>{props.number}</li>
+      <li><ul>
+        <li>{props.time.hours}</li>
+        <li>{props.time.minutes}</li>
+        </ul></li>
+    </ul>
+  )
 }
 
 export default App;

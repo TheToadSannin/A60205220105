@@ -18,7 +18,7 @@ const handleGetTrain = async(req, res) =>{
               const response = await fetch(url, type);
               const json = await response.json();
               console.log("train data", json);
-              return;
+              return res.json(json);
             } catch (error) {
               console.log(error);
             }
